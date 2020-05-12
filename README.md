@@ -10,3 +10,5 @@ Requirements:
 - Flask-JWT-Extended
 - Flask-SQLAlchemy
 - Flask-RESTful
+
+API collection added as: "APIs.postman_collection.json"
