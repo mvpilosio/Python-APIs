@@ -1,0 +1,462 @@
+{
+	"info": {
+		"_postman_id": "c692a9af-48a2-47af-a4ef-fdf55400f967",
+		"name": "APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "GET all Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{url}}/items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items"
+							]
+						},
+						"description": "JSON array of Items"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Item by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/items/tv",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items",
+								"tv"
+							]
+						},
+						"description": "JSON for an item.\nName must be Unique"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item by Name",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"price\": 1299.99,\n\t\"store_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/items/fridge",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items",
+								"fridge"
+							]
+						},
+						"description": "Name must be Unique"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item by Name",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"price\": 1800,\n\t\"store_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/items/tv",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items",
+								"tv"
+							]
+						},
+						"description": "Name must be Unique"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Item by Name",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/items/table",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items",
+								"table"
+							]
+						},
+						"description": "Delete an item by Name"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "Get all Stores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/stores",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"stores"
+							]
+						},
+						"description": "Get registered users and passwords"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Store by name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/store/vic1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"store",
+								"vic1"
+							]
+						},
+						"description": "Get registered users and passwords"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/store/vic1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"store",
+								"vic1"
+							]
+						},
+						"description": "Name must be Unique"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Store by Name",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/store/store test",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"store",
+								"store test"
+							]
+						},
+						"description": "Name must be Unique"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Get registered users and passwords"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"1"
+							]
+						},
+						"description": "Get registered users and passwords"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"mike82\",\n\t\"password\": \"pass1\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1fc15a25-8aa5-40f7-aed8-ff771a9dcb3d",
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);",
+									"tests[\"Access Token is not Empty\"] = jsonData.access_token !== undefined;",
+									"",
+									"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+									"pm.environment.set(\"refrsh_token\", jsonData.refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"mary82\",\n\t\"password\": \"pass1\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "61324852-c3c3-4746-b60a-01e4fcad7b73",
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);",
+									"tests[\"Access Token is not Empty\"] = jsonData.access_token !== undefined;",
+									"",
+									"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+									"pm.environment.set(\"refrsh_token\", jsonData.refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "84f54999-87f2-4298-9acc-d3edd74ed936",
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);",
+									"tests[\"Access Token is not Empty\"] = jsonData.access_token !== undefined;",
+									"",
+									"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+									"pm.environment.set(\"refrsh_token\", jsonData.refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{refresh_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/refresh",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/user/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"1"
+							]
+						},
+						"description": "Get registered users and passwords"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
