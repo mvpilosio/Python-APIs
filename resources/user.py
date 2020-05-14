@@ -21,10 +21,13 @@ user__list_schema = UserSchema(many=True)
 class UsersRegister(Resource):
     @classmethod
     def post(cls):
+        user_json = request.get_json()
         try:
-            user = user_schema.load(request.get_json())
+            user_schema.load(user_json)
         except ValidationError as err:
             return err.messages, 400
+          
+        user = UserModel(**user_json)
 
         if UserModel.find_by_username(user.username):
             return {"Message": f"Username '{user.username}' already created"}, 400
@@ -66,15 +69,16 @@ class User(Resource):
 class UserLogin(Resource):
     @classmethod
     def post(cls):
-        # get data from parser
+      # get data from parser
         try:
             user_data = user_schema.load(request.get_json())
         except ValidationError as err:
             return err.messages, 400
         # find user in db
-        user = UserModel.find_by_username(user_data.username)
+        usr = UserModel(**user_data)
+        user = UserModel.find_by_username(usr.username)
         # check pass
-        if user and safe_str_cmp(user.password, user_data.password):
+        if user and safe_str_cmp(user.password, usr.password):
             # create access token
             access_token = create_access_token(identity=user.id, fresh=True)
             # create refresh token
