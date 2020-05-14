@@ -1,72 +1,53 @@
-from flask_restful import Resource
-from flask import request
-from flask_jwt_extended import (jwt_required, fresh_jwt_required)
-from marshmallow import ValidationError
+from flask import Flask, jsonify
+from flask_restful import Api
+from flask_jwt_extended import JWTManager
 
-from models.items_model import ItemModel
-from schemas.item import ItemSchema
-
-item_schema = ItemSchema()
-item_list_schema = ItemSchema(many=True)
-
-
-class Item(Resource):
-    @classmethod
-    def get(cls, name: str):
-        item = ItemModel.find_by_name(name)
-        if item:
-            return item_schema.dump(item)
-        return {"Message": "Item not found"}, 404
-
-    @classmethod
-    @jwt_required
-    def post(cls, name: str):
-        if ItemModel.find_by_name(name):
-            return {"Message": f"Item: '{name}' already created"}, 400
-
-        item_json = request.get_json()
-        item_json["name"] = name
-        item_load = item_schema.load(item_json)
-        item = ItemModel(**item_json)
-        try:
-            item.save_to_db()
-        except ValidationError as err:
-            return err.messages, 500
-
-        return item_schema.dump(item_load), 201
-
-    @classmethod
-    @jwt_required
-    def put(cls, name: str):
-        item_json = request.get_json()
-        item = ItemModel.find_by_name(name)
-
-        if item:
-            item.price = item_json['price']
-        else:
-            item_json["name"] = name
-            item = ItemModel(**item_json)
-            try:
-                item_schema.load(item_json)
-            except ValidationError as err:
-                return err.messages, 400
-
-        item.save_to_db()
-        return item_schema.dump(item)
-
-    @classmethod
-    @fresh_jwt_required
-    def delete(cls, name: str):
-        item = ItemModel.find_by_name(name)
-        if not item:
-            return "Item not found", 404
-        item.delete_from_db()
-        return {"Message": "Item deleted"}
+from resources.user import UsersRegister, Users, User, UserLogin, TokenRefresh, UserLogout
+from resources.items import Item, Items
+from resources.store import Store, Stores
+from ma import ma
+from blacklist import BLACKLIST
 
 
-class Items(Resource):
-    @classmethod
-    def get(cls):
-        items = item_list_schema.dump(ItemModel.find_all())
-        return {"Items": items}
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 
+app.secret_key = "test"  # app.config["JWT_SECRET_KEY"]
+api = Api(app)
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+
+jwt = JWTManager(app)
+
+
+@jwt.token_in_blacklist_loader
+def token_in_blacklist_callback(decrypted_token):
+    return decrypted_token['identity'] in BLACKLIST
+
+
+api.add_resource(Item, '/items/<string:name>')
+api.add_resource(Items, '/items')
+api.add_resource(Store, '/store/<string:name>')
+api.add_resource(Stores, '/stores')
+
+api.add_resource(UsersRegister, '/register')
+api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogout, '/logout')
+api.add_resource(Users, '/users')
+api.add_resource(User, '/user/<int:user_id>')
+api.add_resource(TokenRefresh, '/refresh')
+
+
+if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
+    ma.init_app(app)
+    app.run(port=3000, debug=True)
