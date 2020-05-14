@@ -1,36 +1,50 @@
-from db import db
+from flask_restful import Resource
+from flask import request
+from flask_jwt_extended import jwt_required, fresh_jwt_required
+from marshmallow import ValidationError
+
+from models.store_model import StoreModel
+from schemas.store import StoreSchema
+
+store_schema = StoreSchema()
+store_list_schema = StoreSchema(many=True)
 
 
-class ItemModel(db.Model):
-    __tablename__ = "items"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    price = db.Column(db.Float(precision=2))
-
-    store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
-    store = db.relationship('StoreModel')
-
-    def __init__(self, name, price, store_id):
-        self.name = name
-        self.price = price
-        self.store_id = store_id
-
-    def json(self):
-        return {"id": self.id, "name": self.name, "price": f"${self.price}", "store_id": self.store_id}
+class Store(Resource):
+    @classmethod
+    def get(cls, name: str):
+        store = StoreModel.find_by_name(name)
+        if not store:
+            return {"Message": f"Store: '{name}' was not found"}, 404
+        return store_schema.dump(store)
 
     @classmethod
-    def find_by_name(cls, name):
-        return cls.query.filter_by(name=name).first()
+    @jwt_required
+    def post(cls, name: str):
+        if StoreModel.find_by_name(name):
+            return {"Message": f"Store: '{name}' already created"}, 400
+
+        store = StoreModel(name=name)
+
+        try:
+            store.save_to_db()
+        except ValidationError as err:
+            return err.messages, 500
+        return store_schema.dump(store), 201
 
     @classmethod
-    def find_all(cls):
-        return cls.query.all()
+    @fresh_jwt_required
+    def delete(cls, name: str):
+        store = StoreModel.find_by_name(name)
+        if store:
+            store.delete_from_db()
+            return {"Message": f"Store: '{name}' deleted", }
+        else:
+            return {"Message": f"Store: '{name}' was not found"}, 404
 
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
 
-    def delete_from_db(self):
-        db.session.delete(self)
-        db.session.commit()
+class Stores(Resource):
+    @classmethod
+    def get(cls):
+        stores = store_list_schema.dump(StoreModel.find_all())
+        return {"Stores": stores}
