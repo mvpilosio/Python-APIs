@@ -5,11 +5,14 @@ Working with a virtual environment:
 - virtualenv venv --python=python3.8
 - source venv/bin/activate
 
-Requirements:
+Packages required:
 - Flask
 - Flask-JWT-Extended
 - Flask-SQLAlchemy
 - Flask-RESTful
+- Marshmallow
+- Flask-Marshmallow
+- Marshmallow-SQLAchemy
 
 With this APIs you can:
 - Create (register) Users. Get all the creatd Users, get a User by ID, delete a User by ID
