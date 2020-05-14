@@ -37,8 +37,11 @@ class Store(Resource):
     def delete(cls, name: str):
         store = StoreModel.find_by_name(name)
         if store:
-            store.delete_from_db()
-            return {"Message": f"Store: '{name}' deleted", }
+            try:
+                store.delete_from_db()
+                return {"Message": f"Store: '{name}' deleted", }
+            except:
+                return {"Message": "Delete the store's items first"}, 400
         else:
             return {"Message": f"Store: '{name}' was not found"}, 404
 
